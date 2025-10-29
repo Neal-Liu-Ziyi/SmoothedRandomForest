@@ -60,7 +60,7 @@ DATASET_MAX_N_OBS = {
     'yacht_hydrodynamics': 300 , # Medium dataset
     'real_estate': 414,
     'winequality-red': 1599,
-    'winequality-white': 4898,
+    'winequality-white': 4898, # Large dataset
     'qsar_fish_toxicity': 908,
     'Combined_Cycle_Power_Plant': 9568,
 }
