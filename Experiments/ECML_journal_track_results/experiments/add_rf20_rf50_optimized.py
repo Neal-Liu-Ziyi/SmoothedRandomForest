@@ -28,22 +28,14 @@ from exp_wrapper import get_bootstrap_samples
 
 # Dataset configurations: maximum available n_obs for each dataset
 DATASET_MAX_N_OBS = {
-    'autompg': 400,
-    'breastcancer': 200,
-    'fertility': 100,
+    'fertility': 100,  # Small dataset
     'forest': 500,
-    'housing': 500,
-    'pendulum': 500,
     'qsar_aquatic_toxicity': 500,
-    'servo': 100,
     'stock': 500,
-    'yacht_hydrodynamics': 300,
-    'ENB2012_data_energy_heating': 768,
-    'ENB2012_data_energy_cooling': 768,
+    'yacht_hydrodynamics': 300 , # Medium dataset
     'real_estate': 414,
     'winequality-red': 1599,
     'winequality-white': 4898,
-    'airfoil_self_noise': 1503,
     'qsar_fish_toxicity': 908,
     'Combined_Cycle_Power_Plant': 9568,
 }
@@ -142,7 +134,7 @@ def optimize_rf_max_depth(X, y, max_depth_range=range(3, 21),
 
 def run_single_experiment(data_name, n_obs, r, save_dir):
     """
-    Retrain RF10 with optimized max_depth for a single experiment
+    Train RF20 and RF50 with optimized max_depth for a single experiment
     
     Args:
         data_name: Name of dataset
@@ -171,11 +163,11 @@ def run_single_experiment(data_name, n_obs, r, save_dir):
             print(f"Data mismatch for {data_name} n={n_obs} r={r}")
             return None
         
-        # Train RF10 with optimized max_depth on 100% data
+        # Train RF20 with optimized max_depth on 100% data
         rf20_result = optimize_rf_max_depth(X_train_all, y_train_all, n_estimators=20, cv=5)
         rf20 = rf20_result['best_rf']
         
-        # Get predictions
+        # Get RF20 predictions
         rf20_pred, rf20_std = get_rf_predictions_with_std(rf20, X_test_all)
         
         # Update prediction DataFrame
@@ -185,8 +177,11 @@ def run_single_experiment(data_name, n_obs, r, save_dir):
         # Save RF20 model
         dump(rf20, f'{save_dir}/{data_name}/rf20/{data_name}_n{n_obs}_r{r}_rf20.joblib', compress=3)
 
+        # Train RF50 with optimized max_depth on 100% data
         rf50_result = optimize_rf_max_depth(X_train_all, y_train_all, n_estimators=50, cv=5)
         rf50 = rf50_result['best_rf']
+        
+        # Get RF50 predictions
         rf50_pred, rf50_std = get_rf_predictions_with_std(rf50, X_test_all)
         pred_df['rf50_pred'] = rf50_pred
         pred_df['rf50_std'] = rf50_std
@@ -210,7 +205,7 @@ def run_experiments(data_name_list,
                    save_dir='../results',
                    n_jobs=5):
     """
-    Main function to retrain RF20 for all experiments
+    Main function to train RF20 and RF50 for all experiments
     
     Args:
         data_name_list: List of dataset names
@@ -276,11 +271,9 @@ def main():
     else:
         # Default: all datasets
         data_names =[
-                # 'autompg', # 'breastcancer', 
-                'fertility', #'forest', # 'housing', 
+                'fertility',
                 'pendulum',
-                'qsar_aquatic_toxicity', 
-                #'servo',  
+                'qsar_aquatic_toxicity',  
                 'stock', 
                 'yacht_hydrodynamics',
                 'real_estate',

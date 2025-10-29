@@ -42,7 +42,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Add paths
-sys.path.append('../../../../')
+sys.path.append('../../../')
 
 from models.Hypsecant import HyperbolicSecant
 from models.RandomForestRegressor import ExtendedRandomForest

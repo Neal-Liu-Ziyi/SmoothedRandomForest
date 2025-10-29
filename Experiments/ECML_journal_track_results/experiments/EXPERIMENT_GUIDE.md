@@ -27,16 +27,34 @@ The `exp_SRFnet_CV_experiments.py` script runs comprehensive cross-validation ex
 ```
 results/
 └── <data_name>/
-    ├── base_rf/              # RF models with 10 trees
-    │   └── <data_name>_n50_r0_rf10.joblib
-    ├── rf100/                # RF models with 100 trees
-    │   └── <data_name>_n50_r0_rf100.joblib
-    ├── predictions/          # All predictions
-    │   └── <data_name>_n50_r0.csv
-    ├── cv_results/           # CV selection info
-    │   └── <data_name>_n50_r0.json
-    └── smoothing_params/     # Learned parameters
-        └── <data_name>_n50_r0.json
+    ├── base_rf/              # Small RF (10 trees, 80% data, CV-tuned max_depth) for SRFnet training
+    │   ├── <data_name>_n50_r0_rf10.joblib
+    │   ├── <data_name>_n50_r1_rf10.joblib
+    │   └── ...
+    ├── rf10/                 # RF (10 trees, 100% data, SAME max_depth as base_rf) for fair comparison
+    │   ├── <data_name>_n50_r0_rf10.joblib
+    │   ├── <data_name>_n50_r1_rf10.joblib
+    │   └── ...
+    ├── rf20/                 # RF (20 trees, 100% data, independently tuned)
+    │   ├── <data_name>_n50_r0_rf20.joblib
+    │   ├── <data_name>_n50_r1_rf20.joblib
+    │   └── ...
+    ├── rf50/                 # RF (50 trees, 100% data, independently tuned)
+    │   ├── <data_name>_n50_r0_rf50.joblib
+    │   ├── <data_name>_n50_r1_rf50.joblib
+    │   └── ...
+    ├── rf100/                # RF (100 trees, 100% data, independently tuned) as strong baseline
+    │   ├── <data_name>_n50_r0_rf100.joblib
+    │   ├── <data_name>_n50_r1_rf100.joblib
+    │   └── ...
+    ├── predictions/          # All predictions and uncertainties
+    │   ├── <data_name>_n50_r0.csv
+    │   ├── <data_name>_n50_r1.csv
+    │   └── ...
+    └── cv_results/           # CV selection results
+        ├── <data_name>_n50_r0.json
+        ├── <data_name>_n50_r1.json
+        └── ...
 ```
 
 ## 🚀 Quick Start
