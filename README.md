@@ -1,4 +1,4 @@
-****# Smoothed Random Forest (SRFnet)
+# Smoothed Random Forest (SRFnet)
 
 A PyTorch implementation of Smoothed Random Forest with gradient-based optimization and uncertainty quantification.
 
