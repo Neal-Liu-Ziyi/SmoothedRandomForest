@@ -1,15 +1,15 @@
 # Smoothed Random Forest (SRFnet)
 
-A PyTorch implementation of Smoothed Random Forest with gradient-based optimization and uncertainty quantification.
+A PyTorch implementation of Smoothed Random Forest with kernel smoothing and gradient-based optimization.
 
 ## Overview
 
 SRFnet is an enhanced random forest model that applies kernel smoothing to tree predictions, enabling:
 - **Differentiable predictions** for gradient-based optimization
-- **Uncertainty quantification** with detailed decomposition
 - **Multiple smoothing strategies** (global, per-dimension, per-tree, per-tree-dimension)
 - **Multiple kernel functions** (Normal, Hyperbolic Secant)
 - **Out-of-Bag (OOB) evaluation** for robust model selection
+- **Improved prediction accuracy** through optimized smoothing parameters
 
 ## Key Features
 
@@ -34,15 +34,11 @@ SRFnet is an enhanced random forest model that applies kernel smoothing to tree 
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/SmoothedRandomForest.git
+git clone https://github.com/Neal-Liu-Ziyi/SmoothedRandomForest.git
 cd SmoothedRandomForest
 
 # Install dependencies
 pip install numpy scipy scikit-learn torch pandas joblib tensorboard
-
-# Or use conda environment
-conda env create -f environment.yml
-conda activate srf-env
 ```
 
 ## Quick Start
@@ -74,27 +70,9 @@ model.fit(
     verbose=True
 )
 
-# Make predictions with uncertainty
-predictions, total_uncertainty, noise_free_uncertainty = model.predict(
-    X_test,
-    return_uncertainty=True,
-    return_noise_free_uncertainty=True
-)
+# Make predictions
+predictions = model.predict(X_test)
 ```
-
-## Uncertainty Quantification
-
-SRFnet provides detailed uncertainty decomposition:
-
-```python
-intra_var, inter_var, model_var = model.get_detailed_uncertainty(X_test)
-```
-
-- **Intra-tree variance**: Average uncertainty within each tree (smoothing-induced)
-- **Inter-tree variance**: Disagreement between different trees (ensemble diversity)
-- **Model variance**: Irreducible error from training set MSE
-
-Total uncertainty = √(intra_var + inter_var + model_var)
 
 ## Experiments
 
@@ -127,16 +105,18 @@ SRFnet uses cross-validation to automatically select the best smoothing mode:
 
 ## Citation
 
-If you use this code in your research, please cite:
+This work is currently under review. If you use this code in your research, please cite:
 
 ```bibtex
-@article{smoothed_random_forest,
-  title={Smoothed Random Forest with Uncertainty Quantification},
-  author={Your Name},
-  journal={ECML Journal Track},
-  year={2024}
+@article{liu2025improving,
+  title={Improving Random Forests by Smoothing},
+  author={Liu, Ziyi and others},
+  note={Manuscript submitted to ECML PKDD Journal Track},
+  year={2025}
 }
 ```
+
+**Paper Status:** Under review at ECML PKDD Journal Track
 
 ## License
 
