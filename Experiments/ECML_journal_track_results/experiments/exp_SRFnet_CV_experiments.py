@@ -598,8 +598,8 @@ def main():
             'fertility', 'forest', 
             'qsar_aquatic_toxicity',  'stock', 'yacht_hydrodynamics',
             'Combined_Cycle_Power_Plant',
-            'winesquality-red',
-            'winesquality-white',
+            'winequality-red',
+            'winequality-white',
             'real_estate',
             'qsar_fish_toxicity',
         ]
