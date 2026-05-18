@@ -202,7 +202,7 @@ This work is currently under review. If you use this code in your research, plea
   title={Improving Random Forests by Smoothing},
   author={Liu, Ziyi and Luong, Phuc and Boley, Mario and Schmidt, Daniel F.},
   note={Manuscript submitted to ECML PKDD Journal Track},
-  year={2025}
+  year={2026}
 }
 ```
 
