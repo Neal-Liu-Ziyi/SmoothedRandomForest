@@ -155,6 +155,9 @@ python exp_other_modes_noCV.py --data_name winequality-red --n_obs_list 100 200 
 
 # Add RF baselines (RF20, RF50)
 python add_rf20_rf50_optimized.py --data_name winequality-red
+
+# Add Gaussian Process baseline (Matern kernel, appends gp_pred and gp_std columns)
+python add_gp.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
 ```
 
 All experiment scripts share the same CLI arguments:
