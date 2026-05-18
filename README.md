@@ -147,17 +147,14 @@ The `Experiments/` folder contains:
 ```bash
 cd Experiments/ECML_journal_track_results/experiments
 
-# Run full SRFnet CV experiments (all 4 smoothing modes, with cross-validation)
-python exp_SRFnet_CV_experiments.py --data_name winequality-red --n_obs_list 50 100 200
+# Run per_tree_dim mode (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
+python exp_EST_PD_noCV.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
+
+# Run global/per_dim/per_tree modes (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
+python exp_other_modes_noCV.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
 
 # Add RF baselines (RF20, RF50)
 python add_rf20_rf50_optimized.py --data_name winequality-red
-
-# Run per_tree_dim mode only, no CV (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
-python exp_EST_PD_noCV.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
-
-# Run global/per_dim/per_tree modes, no CV (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
-python exp_other_modes_noCV.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
 ```
 
 All experiment scripts share the same CLI arguments:
