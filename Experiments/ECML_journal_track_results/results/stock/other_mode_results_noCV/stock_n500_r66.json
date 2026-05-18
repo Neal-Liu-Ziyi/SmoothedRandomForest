@@ -1,0 +1,78 @@
+{
+    "data_name": "stock",
+    "n_obs": 500,
+    "r": 66,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.19635099172592163
+            ],
+            "intercept": [
+                -0.001459777820855379
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.14119648933410645
+            ],
+            "intercept": [
+                -0.00110420782584697
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                11
+            ],
+            "coef": [
+                0.1963663250207901
+            ],
+            "intercept": [
+                -0.0014598759589716792
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                11
+            ],
+            "coef": [
+                0.14120671153068542
+            ],
+            "intercept": [
+                -0.001104274531826377
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.5793842673301697
+            ],
+            "intercept": [
+                -0.003738576313480735
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.4445383846759796
+            ],
+            "intercept": [
+                -0.002974885515868664
+            ]
+        }
+    }
+}

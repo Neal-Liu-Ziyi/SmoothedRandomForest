@@ -1,0 +1,78 @@
+{
+    "data_name": "real_estate",
+    "n_obs": 300,
+    "r": 26,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.8489042520523071
+            ],
+            "intercept": [
+                5.727136611938477
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.8713659048080444
+            ],
+            "intercept": [
+                4.786678314208984
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                6
+            ],
+            "coef": [
+                0.5700251460075378
+            ],
+            "intercept": [
+                13.581348419189453
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                6
+            ],
+            "coef": [
+                0.5557436943054199
+            ],
+            "intercept": [
+                14.007972717285156
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.5306883454322815
+            ],
+            "intercept": [
+                15.096954345703125
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.5319111347198486
+            ],
+            "intercept": [
+                14.973459243774414
+            ]
+        }
+    }
+}

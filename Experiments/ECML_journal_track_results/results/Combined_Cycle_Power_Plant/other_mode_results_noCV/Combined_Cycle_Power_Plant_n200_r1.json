@@ -1,0 +1,78 @@
+{
+    "data_name": "Combined_Cycle_Power_Plant",
+    "n_obs": 200,
+    "r": 1,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                1.0146889686584473
+            ],
+            "intercept": [
+                -7.174896240234375
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                1.0152719020843506
+            ],
+            "intercept": [
+                -7.437835693359375
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                4
+            ],
+            "coef": [
+                0.9938675165176392
+            ],
+            "intercept": [
+                2.51983642578125
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                4
+            ],
+            "coef": [
+                1.0057499408721924
+            ],
+            "intercept": [
+                -2.826995849609375
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.9772864580154419
+            ],
+            "intercept": [
+                9.98931884765625
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.9970796704292297
+            ],
+            "intercept": [
+                0.954376220703125
+            ]
+        }
+    }
+}

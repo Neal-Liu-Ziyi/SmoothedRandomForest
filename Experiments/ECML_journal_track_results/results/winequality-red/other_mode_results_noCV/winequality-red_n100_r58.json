@@ -1,0 +1,78 @@
+{
+    "data_name": "winequality-red",
+    "n_obs": 100,
+    "r": 58,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.847269594669342
+            ],
+            "intercept": [
+                0.8029875755310059
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.8400718569755554
+            ],
+            "intercept": [
+                0.8459081649780273
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                11
+            ],
+            "coef": [
+                0.9102885723114014
+            ],
+            "intercept": [
+                0.42804622650146484
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                11
+            ],
+            "coef": [
+                0.8433098196983337
+            ],
+            "intercept": [
+                0.8128480911254883
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.0218204259872437
+            ],
+            "intercept": [
+                -0.2273116111755371
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.025853157043457
+            ],
+            "intercept": [
+                -0.25365447998046875
+            ]
+        }
+    }
+}

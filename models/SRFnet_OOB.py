@@ -690,6 +690,16 @@ class SRFnetOOB(nn.Module):
         """Get current smoothing parameters"""
         with torch.no_grad():
             return F.softplus(self.smoothing_params).numpy()
+
+    def get_prob_matrix(self, X):
+        """Return probability matrix shape (n_trees, n_samples, n_train)"""
+        self.eval()
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X_tensor = torch.tensor(X, dtype=torch.float32)
+            else:
+                X_tensor = X
+            return self._compute_probabilities(X_tensor).numpy()
     
     def get_oob_score(self):
         """Get current OOB score (MSE)"""

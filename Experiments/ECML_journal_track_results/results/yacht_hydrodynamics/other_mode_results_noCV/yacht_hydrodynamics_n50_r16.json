@@ -1,0 +1,78 @@
+{
+    "data_name": "yacht_hydrodynamics",
+    "n_obs": 50,
+    "r": 16,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                1.1028082370758057
+            ],
+            "intercept": [
+                0.8252444267272949
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                1.1052716970443726
+            ],
+            "intercept": [
+                0.7956185340881348
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                6
+            ],
+            "coef": [
+                1.1406550407409668
+            ],
+            "intercept": [
+                0.1574239730834961
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                6
+            ],
+            "coef": [
+                1.1388473510742188
+            ],
+            "intercept": [
+                0.03693675994873047
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.1552456617355347
+            ],
+            "intercept": [
+                -0.5084896087646484
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.1776937246322632
+            ],
+            "intercept": [
+                -1.5005040168762207
+            ]
+        }
+    }
+}

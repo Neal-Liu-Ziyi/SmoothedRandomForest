@@ -1,0 +1,78 @@
+{
+    "data_name": "qsar_fish_toxicity",
+    "n_obs": 500,
+    "r": 4,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.9734423160552979
+            ],
+            "intercept": [
+                0.024390697479248047
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.9763012528419495
+            ],
+            "intercept": [
+                0.00964975357055664
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                6
+            ],
+            "coef": [
+                1.1535731554031372
+            ],
+            "intercept": [
+                -0.9866509437561035
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                6
+            ],
+            "coef": [
+                1.2163431644439697
+            ],
+            "intercept": [
+                -1.3307805061340332
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.090207576751709
+            ],
+            "intercept": [
+                -0.6454529762268066
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.145641803741455
+            ],
+            "intercept": [
+                -0.9833393096923828
+            ]
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "data_name": "fertility",
+    "n_obs": 100,
+    "r": 90,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.6790946125984192
+            ],
+            "intercept": [
+                -0.0004028771072626114
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.6820854544639587
+            ],
+            "intercept": [
+                -0.0003015897236764431
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                9
+            ],
+            "coef": [
+                0.2961035370826721
+            ],
+            "intercept": [
+                -0.026529978960752487
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                9
+            ],
+            "coef": [
+                0.1485588401556015
+            ],
+            "intercept": [
+                -0.012425657361745834
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.8136382102966309
+            ],
+            "intercept": [
+                -0.04621018469333649
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.7457948923110962
+            ],
+            "intercept": [
+                -0.054280415177345276
+            ]
+        }
+    }
+}

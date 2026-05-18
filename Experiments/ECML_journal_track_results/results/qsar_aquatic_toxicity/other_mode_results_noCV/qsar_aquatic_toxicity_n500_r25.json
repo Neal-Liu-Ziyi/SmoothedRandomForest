@@ -1,0 +1,78 @@
+{
+    "data_name": "qsar_aquatic_toxicity",
+    "n_obs": 500,
+    "r": 25,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.8131202459335327
+            ],
+            "intercept": [
+                0.9045107364654541
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.8296510577201843
+            ],
+            "intercept": [
+                0.8236727714538574
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                8
+            ],
+            "coef": [
+                1.0119401216506958
+            ],
+            "intercept": [
+                -0.1709122657775879
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                8
+            ],
+            "coef": [
+                1.0409512519836426
+            ],
+            "intercept": [
+                -0.3481941223144531
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.9547051191329956
+            ],
+            "intercept": [
+                0.1498551368713379
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                1.0057759284973145
+            ],
+            "intercept": [
+                -0.14325475692749023
+            ]
+        }
+    }
+}

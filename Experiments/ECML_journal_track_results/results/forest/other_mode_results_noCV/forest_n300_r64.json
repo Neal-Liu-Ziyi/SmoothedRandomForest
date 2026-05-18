@@ -1,0 +1,78 @@
+{
+    "data_name": "forest",
+    "n_obs": 300,
+    "r": 64,
+    "smoothing_modes": [
+        "global",
+        "per_dim",
+        "per_tree"
+    ],
+    "global": {
+        "normal": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.2866523861885071
+            ],
+            "intercept": [
+                -0.06044819951057434
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [],
+            "coef": [
+                0.2854047417640686
+            ],
+            "intercept": [
+                -0.06436900049448013
+            ]
+        }
+    },
+    "per_dim": {
+        "normal": {
+            "smoothing_params_shape": [
+                12
+            ],
+            "coef": [
+                0.30281680822372437
+            ],
+            "intercept": [
+                -0.04577221721410751
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                12
+            ],
+            "coef": [
+                0.29931700229644775
+            ],
+            "intercept": [
+                -0.05735643953084946
+            ]
+        }
+    },
+    "per_tree": {
+        "normal": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.3024227023124695
+            ],
+            "intercept": [
+                -0.052360646426677704
+            ]
+        },
+        "hyperbolic_secant": {
+            "smoothing_params_shape": [
+                10
+            ],
+            "coef": [
+                0.3010985255241394
+            ],
+            "intercept": [
+                -0.061333879828453064
+            ]
+        }
+    }
+}
