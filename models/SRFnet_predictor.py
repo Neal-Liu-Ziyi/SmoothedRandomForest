@@ -102,6 +102,7 @@ class SRFnetPredictor:
         self._calibrator: LinearRegression | None = None
         self._calib_coef: float | None = None
         self._calib_intercept: float | None = None
+        self._model_var_cal: float | None = None   # cached after fit()
         self._X_train: np.ndarray | None = None
         self._y_train: np.ndarray | None = None
 
@@ -262,18 +263,18 @@ class SRFnetPredictor:
         )
         intra_var, inter_var, model_var = self._srf.get_detailed_uncertainty(X_test)
 
+        coef = self._calib_coef
         pred_cal, total_std_cal, nf_std_cal = self._calibrate_with_uncertainty(
             raw_pred, intra_var, inter_var, model_var, raw_nf_std
         )
 
-        coef = self._calib_coef
         return {
             'pred':           pred_cal,
             'total_std':      total_std_cal,
             'noise_free_std': nf_std_cal,
             'intra_var':      (coef ** 2) * intra_var,
             'inter_var':      (coef ** 2) * inter_var,
-            'model_var':      self._calib_model_var(),
+            'model_var':      self._model_var_cal,   # cached, no extra forward pass
         }
 
     def get_smoothing_params(self) -> np.ndarray:
@@ -331,18 +332,22 @@ class SRFnetPredictor:
         self._calib_coef = float(lr.coef_.flatten()[0])
         self._calib_intercept = float(lr.intercept_.flatten()[0])
 
+        # Cache calibrated model variance once (matches experiment pipeline:
+        # use the already-computed smoothed_trees mean as training predictions)
+        coef = self._calib_coef
+        intercept = self._calib_intercept
+        train_pred_uncal = smoothed_trees.mean(axis=1)   # (n_train,)
+        train_pred_cal = coef * train_pred_uncal + intercept
+        self._model_var_cal = float(mean_squared_error(y_train, train_pred_cal))
+
     def _calibrate_predictions(self, raw_pred: np.ndarray) -> np.ndarray:
         return self._calibrator.predict(
             raw_pred.reshape(-1, 1)
         ).flatten()
 
     def _calib_model_var(self) -> float:
-        """Compute model variance using calibrated training predictions."""
-        raw_train_pred = self._srf.predict(self._X_train)
-        cal_train_pred = (
-            self._calib_coef * raw_train_pred + self._calib_intercept
-        )
-        return float(mean_squared_error(self._y_train, cal_train_pred))
+        """Return the cached calibrated model variance (computed once during fit)."""
+        return self._model_var_cal
 
     def _calibrate_with_uncertainty(
         self,
