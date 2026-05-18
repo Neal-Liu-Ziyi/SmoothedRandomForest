@@ -184,15 +184,6 @@ results/<data_name>/
     other_mode_predictions_noCV/  # CSV files for global/per_dim/per_tree modes
 ```
 
-## Model Selection
-
-SRFnet uses cross-validation to automatically select the best smoothing mode:
-
-```python
-# CV results are saved in results/{dataset}/cv_results/
-# Contains validation MSE for all 4 smoothing modes
-```
-
 ## Citation
 
 This work is currently under review. If you use this code in your research, please cite:
