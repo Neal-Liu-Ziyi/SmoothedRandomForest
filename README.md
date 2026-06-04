@@ -129,14 +129,23 @@ model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 ```
 
-You can also pass a pre-trained RF:
+Already have a `sklearn.ensemble.RandomForestRegressor`? Use
+`ExtendedRandomForest.upgrade(...)` to convert it in place — it keeps the
+same trained trees and just attaches the OOB machinery SRFnet needs:
 
 ```python
+from sklearn.ensemble import RandomForestRegressor
 from models.RandomForestRegressor import ExtendedRandomForest
+from models.SRFRegressor import SRFRegressor
 
-rf = ExtendedRandomForest(n_estimators=10, bootstrap=True)
+# Existing sklearn RF you already trained somewhere
+rf = RandomForestRegressor(n_estimators=10, bootstrap=True)
 rf.fit(X_train, y_train)
 
+# Upgrade to SRF-compatible RF (same trees, +OOB indices for SRFnet)
+rf = ExtendedRandomForest.upgrade(rf, X_train, y_train)
+
+# Pass it straight to SRFRegressor — SRF training will reuse the trees
 model = SRFRegressor()
 model.fit(X_train, y_train, rf=rf)
 predictions = model.predict(X_test)
