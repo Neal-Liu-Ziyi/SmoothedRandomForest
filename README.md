@@ -2,7 +2,7 @@
   <img src="smoorf_logo.png" alt="SmooRF logo" width="220" />
 </p>
 
-# Smoothed Random Forest (SRFnet)
+# Smoothed Random Forest
 
 A PyTorch implementation of Smoothed Random Forest with kernel smoothing and gradient-based optimization.
 
