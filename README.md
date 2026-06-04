@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="smoorf_logo.png" alt="SmooRF logo" width="220" />
+  <img src="smoorf_logo.png" alt="SmooRF logo" width="300" />
 </p>
 
 # Smoothed Random Forest
