@@ -4,11 +4,14 @@ SRFnet_OOB Optimizer and Scheduler Configurations
 Provides optimized optimizer and scheduler configuration functions for four different smoothing_modes.
 These functions can be directly used in the fit() method.
 
+Mode names follow the paper (STE, STE-PD, EST, EST-PD). Legacy names
+(global, per_dim, per_tree, per_tree_dim) are still accepted.
+
 Usage:
-    model = SRFnetOOB(smoothing_mode='global')
-    model.fit(X, y, 
-              optimizer=optimizer_global,
-              scheduler=scheduler_global)
+    model = SRFnetOOB(smoothing_mode='STE')
+    model.fit(X, y,
+              optimizer=optimizer_STE,
+              scheduler=scheduler_STE)
 """
 
 import torch
@@ -178,49 +181,77 @@ def scheduler_per_tree_dim(optimizer):
 # Convenience function: Automatically select based on smoothing_mode
 # ============================================================================
 
+# Canonical-name aliases for the helper functions above (paper terminology).
+# The underlying functions are unchanged — these just give them paper-aligned names.
+optimizer_STE     = optimizer_global
+scheduler_STE     = scheduler_global
+optimizer_STE_PD  = optimizer_per_dim
+scheduler_STE_PD  = scheduler_per_dim
+optimizer_EST     = optimizer_per_tree
+scheduler_EST     = scheduler_per_tree
+optimizer_EST_PD  = optimizer_per_tree_dim
+scheduler_EST_PD  = scheduler_per_tree_dim
+
+
+# Map legacy mode names to the canonical paper names (mirrors SRFnet_OOB).
+_MODE_ALIASES = {
+    'global':       'STE',
+    'per_dim':      'STE_PD',
+    'per_tree':     'EST',
+    'per_tree_dim': 'EST_PD',
+    'STE':    'STE',
+    'STE_PD': 'STE_PD',
+    'EST':    'EST',
+    'EST_PD': 'EST_PD',
+}
+
+
 def get_optimizer_scheduler(smoothing_mode, total_epochs=100):
     """
     Automatically return recommended optimizer and scheduler based on smoothing_mode
-    
+
     Args:
-        smoothing_mode: 'global', 'per_dim', 'per_tree', 'per_tree_dim'
-        total_epochs: Total number of training epochs (needed for OneCycleLR in per_tree_dim)
-    
+        smoothing_mode: 'STE', 'STE_PD', 'EST', 'EST_PD'
+            (legacy aliases 'global', 'per_dim', 'per_tree', 'per_tree_dim' are also accepted)
+        total_epochs: Total number of training epochs (needed for OneCycleLR in EST_PD)
+
     Returns:
         optimizer_fn, scheduler_fn: Two functions that can be directly passed to fit()
-        
+
     Usage:
-        opt_fn, sch_fn = get_optimizer_scheduler('global')
+        opt_fn, sch_fn = get_optimizer_scheduler('STE')
         model.fit(X, y, optimizer=opt_fn, scheduler=sch_fn)
     """
+    if smoothing_mode not in _MODE_ALIASES:
+        raise ValueError(
+            f"Unknown smoothing_mode: {smoothing_mode!r}. "
+            f"Must be one of {sorted(set(_MODE_ALIASES))}"
+        )
+    canonical = _MODE_ALIASES[smoothing_mode]
+
     configs = {
-        'global': (
+        'STE': (
             optimizer_global,
             scheduler_global
         ),
-        'per_dim': (
+        'STE_PD': (
             optimizer_per_dim,
             scheduler_per_dim
         ),
-        'per_tree': (
+        'EST': (
             optimizer_per_tree,
             scheduler_per_tree
         ),
-        'per_tree_dim': (
+        'EST_PD': (
             # Need to modify OneCycleLR epochs parameter
             optimizer_per_tree_dim,
             lambda opt: torch.optim.lr_scheduler.OneCycleLR(
                 opt, max_lr=0.1, epochs=total_epochs, steps_per_epoch=1,
                 pct_start=0.3, anneal_strategy='cos'
             )
-        )
+        ),
     }
-    
-    if smoothing_mode not in configs:
-        raise ValueError(f"Unknown smoothing_mode: {smoothing_mode}. "
-                        f"Must be one of {list(configs.keys())}")
-    
-    return configs[smoothing_mode]
+    return configs[canonical]
 
 
 # ============================================================================

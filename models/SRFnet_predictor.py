@@ -8,7 +8,7 @@ This module provides a user-friendly interface that combines:
   - Calibrated predictions with full uncertainty decomposition
 
 Default settings mirror the recommended configuration from the paper:
-  - smoothing_mode : 'per_tree_dim'
+  - smoothing_mode : 'EST_PD'  (EST with per-dimension)
   - srf_kernel     : 'hyperbolic_secant'
   - n_estimators   : 10  (RF10)
   - epochs         : 100
@@ -50,12 +50,12 @@ class SRFnetPredictor:
 
     Parameters
     ----------
-    smoothing_mode : str, default='per_tree_dim'
-        Smoothing granularity. Options:
-        - 'global'        : one shared parameter for all trees and features
-        - 'per_dim'       : one parameter per feature
-        - 'per_tree'      : one parameter per tree
-        - 'per_tree_dim'  : one parameter per (tree, feature) — recommended by the paper
+    smoothing_mode : str, default='EST_PD'
+        Smoothing granularity (paper names; legacy names in parentheses are also accepted):
+        - 'STE'     (legacy: 'global')        : one shared parameter for all trees and features
+        - 'STE_PD'  (legacy: 'per_dim')       : one parameter per feature
+        - 'EST'     (legacy: 'per_tree')      : one parameter per tree
+        - 'EST_PD'  (legacy: 'per_tree_dim')  : one parameter per (tree, feature) — recommended by the paper
     srf_kernel : str, default='hyperbolic_secant'
         Kernel function used for smoothing. Options:
         - 'normal'             : Gaussian kernel
@@ -78,7 +78,7 @@ class SRFnetPredictor:
 
     def __init__(
         self,
-        smoothing_mode: str = 'per_tree_dim',
+        smoothing_mode: str = 'EST_PD',
         srf_kernel: str = 'hyperbolic_secant',
         n_estimators: int = 10,
         epochs: int = 100,
@@ -282,10 +282,10 @@ class SRFnetPredictor:
         Return the learned smoothing parameters after softplus transform.
 
         Shape depends on smoothing_mode:
-        - 'global'        → scalar
-        - 'per_dim'       → (n_features,)
-        - 'per_tree'      → (n_estimators,)
-        - 'per_tree_dim'  → (n_estimators, n_features)
+        - 'STE'     → scalar
+        - 'STE_PD'  → (n_features,)
+        - 'EST'     → (n_estimators,)
+        - 'EST_PD'  → (n_estimators, n_features)
         """
         self._check_is_fitted()
         return self._srf.get_smoothing_params()

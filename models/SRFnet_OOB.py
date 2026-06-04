@@ -8,7 +8,8 @@ gradient-based parameter optimization.
 Key Features:
 - OOB-based objective function (no debiasing)
 - Differentiable implementation using PyTorch
-- Multiple smoothing modes: 'global', 'per_dim', 'per_tree', 'per_tree_dim'
+- Multiple smoothing modes: 'STE', 'STE_PD', 'EST', 'EST_PD'
+  (legacy aliases 'global', 'per_dim', 'per_tree', 'per_tree_dim' are still accepted)
 - Multiple kernel functions: 'normal', 'hyperbolic_secant'
 - Gradient-based optimization with early stopping
 - TensorBoard logging support
@@ -19,7 +20,7 @@ The main difference from DifferentiableSRF:
 3. Objective computes individual tree OOB predictions and aggregates MSE
 
 Usage Example:
-    model = SRFnetOOB(n_estimators=100, smoothing_mode='global', srf_kernel='normal')
+    model = SRFnetOOB(n_estimators=100, smoothing_mode='STE', srf_kernel='normal')
     model.fit(X_train, y_train, epochs=100, lr=0.01)
     predictions = model.predict(X_test)
 """
@@ -38,19 +39,41 @@ import pandas as pd
 from joblib import Parallel, delayed
 from torch.utils.tensorboard import SummaryWriter
 
+
+# Canonical smoothing-mode names follow the paper (STE, STE-PD, EST, EST-PD).
+# Legacy names from earlier versions of the code are still accepted as aliases.
+SMOOTHING_MODE_ALIASES = {
+    # legacy → canonical
+    'global':       'STE',
+    'per_dim':      'STE_PD',
+    'per_tree':     'EST',
+    'per_tree_dim': 'EST_PD',
+    # canonical → canonical (identity)
+    'STE':    'STE',
+    'STE_PD': 'STE_PD',
+    'EST':    'EST',
+    'EST_PD': 'EST_PD',
+}
+
+
 class SRFnetOOB(nn.Module):
-    def __init__(self, 
+    def __init__(self,
                  n_estimators=100,
                  jobs=1,
-                 smoothing_mode='global',  # 'global', 'per_dim', 'per_tree', 'per_tree_dim'
+                 smoothing_mode='STE',    # 'STE', 'STE_PD', 'EST', 'EST_PD' (legacy: global, per_dim, per_tree, per_tree_dim)
                  init_smoothing=1.0,
                  srf_kernel='normal',     # 'normal' or 'hyperbolic_secant'
                  **rf_kwargs):
         super(SRFnetOOB, self).__init__()
-        
+
         self.n_estimators = n_estimators
         self.jobs = jobs
-        self.smoothing_mode = smoothing_mode
+        if smoothing_mode not in SMOOTHING_MODE_ALIASES:
+            raise ValueError(
+                f"Unknown smoothing_mode: {smoothing_mode!r}. "
+                f"Expected one of {sorted(set(SMOOTHING_MODE_ALIASES))}."
+            )
+        self.smoothing_mode = SMOOTHING_MODE_ALIASES[smoothing_mode]
         self.srf_kernel = srf_kernel
         self.rf_params = rf_kwargs
         
@@ -76,16 +99,16 @@ class SRFnetOOB(nn.Module):
         
     def _initialize_smoothing_params(self):
         """Initialize smoothing parameters according to smoothing_mode"""
-        if self.smoothing_mode == 'global':
+        if self.smoothing_mode == 'STE':
             # Single global parameter
             self.smoothing_params = nn.Parameter(torch.tensor(self.init_smoothing))
-        elif self.smoothing_mode == 'per_dim':
+        elif self.smoothing_mode == 'STE_PD':
             # One parameter for each feature
             self.smoothing_params = nn.Parameter(torch.full((self.n_features,), self.init_smoothing))
-        elif self.smoothing_mode == 'per_tree':
+        elif self.smoothing_mode == 'EST':
             # One parameter for each tree
             self.smoothing_params = nn.Parameter(torch.full((self.n_estimators,), self.init_smoothing))
-        elif self.smoothing_mode == 'per_tree_dim':
+        elif self.smoothing_mode == 'EST_PD':
             # One parameter for each tree and each feature
             self.smoothing_params = nn.Parameter(torch.full((self.n_estimators, self.n_features), self.init_smoothing))
         else:
@@ -119,13 +142,13 @@ class SRFnetOOB(nn.Module):
         positive_params = F.softplus(clamped_params) + 1e-6
         
         # Reshape for broadcasting compatibility
-        if self.smoothing_mode == 'global':
+        if self.smoothing_mode == 'STE':
             return positive_params.view(1, 1, 1, 1)
-        elif self.smoothing_mode == 'per_dim':
+        elif self.smoothing_mode == 'STE_PD':
             return positive_params.view(1, 1, 1, -1)
-        elif self.smoothing_mode == 'per_tree':
+        elif self.smoothing_mode == 'EST':
             return positive_params.view(-1, 1, 1, 1)
-        elif self.smoothing_mode == 'per_tree_dim':
+        elif self.smoothing_mode == 'EST_PD':
             return positive_params.view(n_trees, 1, 1, -1)
         else:
             raise ValueError(f"Unknown smoothing_mode: {self.smoothing_mode}")
@@ -360,7 +383,7 @@ class SRFnetOOB(nn.Module):
         
         if verbose:
             try:
-                if self.smoothing_mode == 'global':
+                if self.smoothing_mode == 'STE':
                     param_value = F.softplus(self.smoothing_params).item()
                     print(f"Initial smoothing parameter: {param_value:.6f}")
                 else:
@@ -485,7 +508,7 @@ class SRFnetOOB(nn.Module):
                     writer.add_scalar('Learning_Rate', optimizer.param_groups[0]['lr'], epoch)
                     
                     # Log smoothing parameters
-                    if self.smoothing_mode == 'global':
+                    if self.smoothing_mode == 'STE':
                         writer.add_scalar('Smoothing/Global', F.softplus(self.smoothing_params).item(), epoch)
                     else:
                         smoothing_vals = F.softplus(self.smoothing_params)

@@ -21,10 +21,14 @@ SRFnet is an enhanced random forest model that applies kernel smoothing to tree 
 - **`optimizer_configs.py`**: Pre-configured optimizers and schedulers
 
 ### Smoothing Modes
-- **Global**: Single smoothing parameter for all features and trees
-- **Per-dimension**: One parameter per feature
-- **Per-tree**: One parameter per tree
-- **Per-tree-dimension**: One parameter per tree-feature combination
+Paper names are used in the API; legacy names from earlier code are still accepted as aliases.
+
+| Paper name | Legacy name | Description |
+|---|---|---|
+| `STE`     | `global`        | Single smoothing parameter for all features and trees |
+| `STE_PD`  | `per_dim`       | One parameter per feature |
+| `EST`     | `per_tree`      | One parameter per tree |
+| `EST_PD`  | `per_tree_dim`  | One parameter per tree-feature combination (paper default) |
 
 ### Kernel Functions
 - **Normal (Gaussian)**: Standard Gaussian kernel
@@ -67,14 +71,14 @@ rf.fit(X_train, y_train)
 
 # ── Step 2: Optimise SRFnet smoothing parameters ──────────────────────
 #   Default settings recommended by the paper:
-#     smoothing_mode = 'per_tree_dim'
+#     smoothing_mode = 'EST_PD'   (legacy alias: 'per_tree_dim')
 #     srf_kernel     = 'hyperbolic_secant'
 model = SRFnetOOB(
-    smoothing_mode='per_tree_dim',
+    smoothing_mode='EST_PD',
     srf_kernel='hyperbolic_secant',
     init_smoothing=0.5,
 )
-opt_fn, sch_fn = get_optimizer_scheduler('per_tree_dim', total_epochs=100)
+opt_fn, sch_fn = get_optimizer_scheduler('EST_PD', total_epochs=100)
 model.fit(
     X_train, y_train,
     rf=rf,
@@ -115,7 +119,7 @@ Defaults match the paper's recommended settings.
 ```python
 from models.SRFnet_predictor import SRFnetPredictor
 
-model = SRFnetPredictor()          # per_tree_dim + hyperbolic_secant + RF10
+model = SRFnetPredictor()          # EST_PD + hyperbolic_secant + RF10
 model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 ```
@@ -147,10 +151,10 @@ The `Experiments/` folder contains:
 ```bash
 cd Experiments/ECML_journal_track_results/experiments
 
-# Run per_tree_dim mode (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
+# Run EST_PD mode (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
 python exp_EST_PD_noCV.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
 
-# Run global/per_dim/per_tree modes (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
+# Run STE / STE_PD / EST modes (loads pre-trained RF10, outputs calibrated predictions + uncertainty)
 python exp_other_modes_noCV.py --data_name winequality-red --n_obs_list 100 200 --n_jobs 5
 
 # Add RF baselines (RF20, RF50)
@@ -180,8 +184,9 @@ results/<data_name>/
                                   #   srf_{kernel}_EST_PD_total_std
                                   #   srf_{kernel}_EST_PD_noise_free_std
                                   #   srf_{kernel}_EST_PD_{intra,inter,model}_var
-    other_mode_results_noCV/      # JSON files for global/per_dim/per_tree modes
-    other_mode_predictions_noCV/  # CSV files for global/per_dim/per_tree modes
+    other_mode_results_noCV/      # JSON files for STE / STE_PD / EST modes
+                                  # (CSV/JSON column names use legacy keys global/per_dim/per_tree)
+    other_mode_predictions_noCV/  # CSV files for STE / STE_PD / EST modes
 ```
 
 ## Citation
