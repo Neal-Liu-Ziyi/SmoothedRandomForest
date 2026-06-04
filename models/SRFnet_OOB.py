@@ -60,7 +60,7 @@ class SRFnetOOB(nn.Module):
     def __init__(self,
                  n_estimators=100,
                  jobs=1,
-                 smoothing_mode='STE',    # 'STE', 'STE_PD', 'EST', 'EST_PD' (legacy: global, per_dim, per_tree, per_tree_dim)
+                 smoothing_mode='EST_PD',    # 'STE', 'STE_PD', 'EST', 'EST_PD' (legacy: global, per_dim, per_tree, per_tree_dim)
                  init_smoothing=1.0,
                  srf_kernel='normal',     # 'normal' or 'hyperbolic_secant'
                  **rf_kwargs):

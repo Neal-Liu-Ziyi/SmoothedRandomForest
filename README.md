@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="smoorf_logo.png" alt="SmooRF logo" width="220" />
+</p>
+
 # Smoothed Random Forest (SRFnet)
 
 A PyTorch implementation of Smoothed Random Forest with kernel smoothing and gradient-based optimization.
@@ -6,7 +10,7 @@ A PyTorch implementation of Smoothed Random Forest with kernel smoothing and gra
 
 SRFnet is an enhanced random forest model that applies kernel smoothing to tree predictions, enabling:
 - **Differentiable predictions** for gradient-based optimization
-- **Multiple smoothing strategies** (global, per-dimension, per-tree, per-tree-dimension)
+- **Multiple smoothing strategies** — `STE`, `STE_PD`, `EST`, `EST_PD` (legacy names `global` / `per_dim` / `per_tree` / `per_tree_dim` are still accepted)
 - **Multiple kernel functions** (Normal, Hyperbolic Secant)
 - **Out-of-Bag (OOB) evaluation** for robust model selection
 - **Improved prediction accuracy** through optimized smoothing parameters
@@ -15,6 +19,7 @@ SRFnet is an enhanced random forest model that applies kernel smoothing to tree 
 
 ### Model Components (`models/`)
 - **`SRFnet_OOB.py`**: Main SRFnet model with OOB-based optimization
+- **`SRFRegressor.py`**: High-level scikit-learn-style wrapper (RF + SRFnet + OOB calibration) — recommended entry point
 - **`RandomForestRegressor.py`**: Extended sklearn RandomForest with OOB methods
 - **`Hypsecant.py`**: Hyperbolic Secant kernel implementation
 - **`TreeInfoExtractor.py`**: Utilities for extracting tree structure information
@@ -111,15 +116,15 @@ predictions = calibrator.predict(srf_pred.reshape(-1, 1)).flatten()
 
 ---
 
-### Method 2 — High-level Wrapper (`SRFnetPredictor`)
+### Method 2 — High-level Wrapper (`SRFRegressor`)
 
-`SRFnetPredictor` wraps all four steps above into a single class.
+`SRFRegressor` wraps all four steps above into a single class.
 Defaults match the paper's recommended settings.
 
 ```python
-from models.SRFnet_predictor import SRFnetPredictor
+from models.SRFRegressor import SRFRegressor
 
-model = SRFnetPredictor()          # EST_PD + hyperbolic_secant + RF10
+model = SRFRegressor()             # EST_PD + hyperbolic_secant + RF10
 model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 ```
@@ -132,7 +137,7 @@ from models.RandomForestRegressor import ExtendedRandomForest
 rf = ExtendedRandomForest(n_estimators=10, bootstrap=True)
 rf.fit(X_train, y_train)
 
-model = SRFnetPredictor()
+model = SRFRegressor()
 model.fit(X_train, y_train, rf=rf)
 predictions = model.predict(X_test)
 ```

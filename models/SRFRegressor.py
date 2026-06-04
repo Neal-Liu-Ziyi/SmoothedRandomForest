@@ -1,5 +1,5 @@
 """
-SRFnetPredictor: High-level wrapper for SRFnet with built-in OOB calibration.
+SRFRegressor: High-level wrapper for SRFnet with built-in OOB calibration.
 
 This module provides a user-friendly interface that combines:
   - Random Forest fitting (or accepting a pre-trained RF)
@@ -15,9 +15,9 @@ Default settings mirror the recommended configuration from the paper:
 
 Typical usage
 -------------
-    from models.SRFnet_predictor import SRFnetPredictor
+    from models.SRFRegressor import SRFRegressor
 
-    model = SRFnetPredictor()
+    model = SRFRegressor()
     model.fit(X_train, y_train)
 
     # Point predictions (calibrated)
@@ -44,7 +44,7 @@ from models.SRFnet_OOB import SRFnetOOB
 from models.optimizer_configs import get_optimizer_scheduler
 
 
-class SRFnetPredictor:
+class SRFRegressor:
     """
     End-to-end SRFnet predictor with OOB calibration.
 
@@ -111,7 +111,7 @@ class SRFnetPredictor:
     # ------------------------------------------------------------------
 
     def fit(self, X_train: np.ndarray, y_train: np.ndarray,
-            rf=None) -> "SRFnetPredictor":
+            rf=None) -> "SRFRegressor":
         """
         Fit SRFnet and compute the OOB calibration coefficients.
 
@@ -380,5 +380,5 @@ class SRFnetPredictor:
     def _check_is_fitted(self):
         if self._srf is None or self._calibrator is None:
             raise RuntimeError(
-                "SRFnetPredictor is not fitted yet. Call fit() first."
+                "SRFRegressor is not fitted yet. Call fit() first."
             )
