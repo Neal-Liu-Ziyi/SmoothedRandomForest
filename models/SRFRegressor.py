@@ -302,6 +302,29 @@ class SRFRegressor:
         self._check_is_fitted()
         return self._calib_intercept
 
+    @property
+    def y_train_(self) -> np.ndarray:
+        """Training targets seen by fit()."""
+        self._check_is_fitted()
+        return self._y_train
+
+    def get_effective_kernel(self, X: np.ndarray) -> np.ndarray:
+        """
+        Effective kernel matrix averaged over trees.
+
+        Returns
+        -------
+        K : np.ndarray, shape (n_samples, n_train)
+            K[j, i] = mean over trees of the kernel weight assigned by the
+            smoothed forest to training point i when predicting point j.
+            Row j is therefore the (un-normalised) weight distribution over
+            training points for test point j.
+        """
+        self._check_is_fitted()
+        X = np.asarray(X)
+        prob_matrix = self._srf.get_prob_matrix(X)   # (n_trees, n_samples, n_train)
+        return prob_matrix.mean(axis=0)
+
     # ------------------------------------------------------------------
     # Private helpers
     # ------------------------------------------------------------------

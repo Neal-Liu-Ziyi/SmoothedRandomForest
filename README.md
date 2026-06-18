@@ -20,6 +20,7 @@ SRFnet is an enhanced random forest model that applies kernel smoothing to tree 
 ### Model Components (`models/`)
 - **`SRFnet_OOB.py`**: Main SRFnet model with OOB-based optimization
 - **`SRFRegressor.py`**: High-level scikit-learn-style wrapper (RF + SRFnet + OOB calibration) — recommended entry point
+- **`SRFinference.py`**: Inference-only sibling of `SRFnet_OOB` — numpy + scipy, no pytorch; takes a pre-trained bandwidth and skips all optimisation. See Method 3 below.
 - **`RandomForestRegressor.py`**: Extended sklearn RandomForest with OOB methods
 - **`Hypsecant.py`**: Hyperbolic Secant kernel implementation
 - **`TreeInfoExtractor.py`**: Utilities for extracting tree structure information
@@ -150,6 +151,87 @@ model = SRFRegressor()
 model.fit(X_train, y_train, rf=rf)
 predictions = model.predict(X_test)
 ```
+
+---
+
+### Method 3 — Lightweight Inference (`SRFInference`)
+
+Pickling a fully-trained `SRFRegressor` / `SRFnetOOB` is heavy: the
+pytorch state, optimiser history, tree-info cache, and OOB bookkeeping
+all get serialised. If you only need predictions / effective-kernel
+matrices / variance decomposition at *inference time*, you can save just
+**two** small artefacts and rebuild the predictor on the fly:
+
+1. the trained `ExtendedRandomForest` (`joblib.dump(rf, ...)`)
+2. the smoothing-bandwidth array (`np.savez(..., bandwidth=model._srf.get_smoothing_params())`)
+3. *(optional)* the OOB linear calibration coefficients
+   (`model.calibration_coef_`, `model.calibration_intercept_`)
+
+`SRFInference` is a pure numpy + scipy implementation that reproduces
+the same effective kernel and variance decomposition as `SRFnet_OOB` to
+~1e-6 (the only gap is the `+1e-6` softplus pad inside SRFnetOOB). It
+does **not** train smoothing parameters and does **not** fit the OOB
+calibration — both must be supplied externally.
+
+**Save side (training machine):**
+
+```python
+import numpy as np
+from joblib import dump
+from models.SRFRegressor import SRFRegressor
+
+model = SRFRegressor().fit(X_train, y_train)
+
+# Three small artefacts:
+dump(model._rf, 'rf.joblib')                              # tens of KB
+np.savez('bandwidth.npz',
+         bandwidth = model._srf.get_smoothing_params())   # < 1 KB
+np.savez('calibration.npz',
+         coef      = model.calibration_coef_,
+         intercept = model.calibration_intercept_)        # < 1 KB
+```
+
+**Load side (inference machine):**
+
+```python
+import numpy as np
+from joblib import load
+from models.SRFinference import SRFInference
+from models.Hypsecant import HyperbolicSecant
+
+rf        = load('rf.joblib')                            # ExtendedRandomForest
+bandwidth = np.load('bandwidth.npz')['bandwidth']
+calib     = np.load('calibration.npz')
+coef, intercept = float(calib['coef']), float(calib['intercept'])
+
+inf = SRFInference(
+    smoothing_params=bandwidth,
+    kernel=HyperbolicSecant,         # or scipy.stats.norm for 'normal'
+    per_tree=True,                    # True for EST / EST_PD; False for STE / STE_PD
+)
+inf.fit(X_train, y_train, rf=rf, coef=coef, intercept=intercept)
+
+# Calibrated predictions + uncertainty (matches SRFnet_OOB exactly)
+pred, total_std, noise_free_std = inf.predict(
+    X_test,
+    return_uncertainty=True,
+    return_noise_free_uncertainty=True,
+    calibrate=True,
+)
+
+# Per-test-point variance decomposition (uncalibrated, matches SRFnet_OOB.get_detailed_uncertainty)
+intra_var, inter_var, model_var = inf.get_detailed_uncertainty(X_test)
+
+# Effective kernel matrix (n_test, n_train) — handy for downstream EL / conformal CIs
+K_test = inf.get_effective_kernel(X_test)
+```
+
+`per_tree` should match how the bandwidth was trained:
+
+| Smoothing mode | `per_tree` |
+|---|---|
+| `STE`, `STE_PD` | `False` |
+| `EST`, `EST_PD` | `True` |
 
 ## Experiments
 

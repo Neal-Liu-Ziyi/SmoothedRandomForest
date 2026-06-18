@@ -714,6 +714,50 @@ class SRFnetOOB(nn.Module):
         with torch.no_grad():
             return F.softplus(self.smoothing_params).numpy()
 
+    def set_smoothing_params(self, positive_values):
+        """
+        Inject smoothing parameters from positive (post-softplus) values, e.g.
+        those returned by ``get_smoothing_params()`` or loaded from saved npz.
+
+        Internally the parameter stored on the module is the *raw* (pre-softplus)
+        nn.Parameter that gradient descent optimises; ``forward()`` always
+        applies ``softplus`` to turn it into a positive bandwidth. To inject a
+        positive value `a` directly we must store ``inv_softplus(a)`` so that
+        ``softplus(stored) == a`` at the next forward pass.
+
+        Parameters
+        ----------
+        positive_values : array-like
+            Positive smoothing parameters. Shape must match the current
+            ``smoothing_params`` (i.e. matches the ``smoothing_mode``).
+
+        Raises
+        ------
+        RuntimeError
+            If called before ``fit()`` has initialised the internal parameter.
+        ValueError
+            If the supplied shape does not match the model's expected shape.
+        """
+        if self.smoothing_params is None:
+            raise RuntimeError(
+                "smoothing_params is not initialised yet. Call .fit() first "
+                "(epochs=1 is enough) so the internal nn.Parameter is built."
+            )
+        arr = np.asarray(positive_values, dtype=np.float32)
+        expected = tuple(self.smoothing_params.shape)
+        if arr.shape != expected:
+            raise ValueError(
+                f"shape mismatch: got {arr.shape}, expected {expected} for "
+                f"smoothing_mode={self.smoothing_mode!r}."
+            )
+        if np.any(arr <= 0):
+            raise ValueError("positive_values must be strictly positive.")
+        # Inverse softplus: log(expm1(a))   (numerically safe for a > 0;
+        # for very large a, softplus(x) ≈ x so use a itself).
+        raw = np.where(arr > 20.0, arr, np.log(np.expm1(arr))).astype(np.float32)
+        with torch.no_grad():
+            self.smoothing_params.copy_(torch.from_numpy(raw))
+
     def get_prob_matrix(self, X):
         """Return probability matrix shape (n_trees, n_samples, n_train)"""
         self.eval()
