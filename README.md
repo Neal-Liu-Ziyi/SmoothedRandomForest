@@ -287,18 +287,24 @@ results/<data_name>/
 
 ## Citation
 
-This work is currently under review. If you use this code in your research, please cite:
+This work has been published in *Machine Learning* (Springer Nature, 2026).
+If you use this code in your research, please cite:
 
 ```bibtex
-@article{liu2025improving,
-  title={Improving Random Forests by Smoothing},
-  author={Liu, Ziyi and Luong, Phuc and Boley, Mario and Schmidt, Daniel F.},
-  note={Manuscript submitted to ECML PKDD Journal Track},
-  year={2026}
+@article{liu2026improving,
+  title     = {Improving Random Forests by Smoothing},
+  author    = {Liu, Ziyi and Luong, Phuc and Boley, Mario and Schmidt, Daniel F.},
+  journal   = {Machine Learning},
+  volume    = {115},
+  number    = {152},
+  year      = {2026},
+  publisher = {Springer Nature},
+  doi       = {10.1007/s10994-026-07077-z},
+  url       = {https://link.springer.com/article/10.1007/s10994-026-07077-z}
 }
 ```
 
-**Paper Status:** Under review at ECML PKDD Journal Track
+**Paper:** [Liu et al. (2026), *Machine Learning* 115:152](https://link.springer.com/article/10.1007/s10994-026-07077-z)
 
 ## License
 
