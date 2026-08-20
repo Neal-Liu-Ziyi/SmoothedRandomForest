@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.utils.validation import check_X_y, check_array
-from .VariantRF import VariantRandomForest
 
 
 class SklearnTreeInfoExtractor:
@@ -246,7 +245,6 @@ class SklearnTreeInfoExtractor:
         sample_info = self.sample_info_data
         return np.array([info['leaf_bounds'] for info in sample_info])
     
-
 
 
 
