@@ -40,7 +40,7 @@ warnings.filterwarnings('ignore', category=ConvergenceWarning)
 sys.path.append('../../../')
 sys.path.append('../../../../')
 
-from models.GaussianProcess import GPmodel
+from smoorf.GaussianProcess import GPmodel
 from exp_wrapper import get_bootstrap_samples
 
 

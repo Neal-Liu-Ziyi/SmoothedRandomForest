@@ -17,7 +17,7 @@ SRFnet is an enhanced random forest model that applies kernel smoothing to tree 
 
 ## Key Features
 
-### Model Components (`models/`)
+### Model Components (`smoorf/`)
 - **`SRFnet_OOB.py`**: Main SRFnet model with OOB-based optimization
 - **`SRFRegressor.py`**: High-level scikit-learn-style wrapper (RF + SRFnet + OOB calibration) — recommended entry point
 - **`SRFinference.py`**: Inference-only sibling of `SRFnet_OOB` — numpy + scipy, no pytorch; takes a pre-trained bandwidth and skips all optimisation. See Method 3 below.
@@ -67,9 +67,9 @@ apply OOB linear calibration, and produce point predictions.
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-from models.RandomForestRegressor import ExtendedRandomForest
-from models.SRFnet_OOB import SRFnetOOB
-from models.optimizer_configs import get_optimizer_scheduler
+from smoorf.RandomForestRegressor import ExtendedRandomForest
+from smoorf.SRFnet_OOB import SRFnetOOB
+from smoorf.optimizer_configs import get_optimizer_scheduler
 
 # ── Step 1: Train RF10 ────────────────────────────────────────────────
 rf = ExtendedRandomForest(n_estimators=10, bootstrap=True)
@@ -123,7 +123,7 @@ predictions = calibrator.predict(srf_pred.reshape(-1, 1)).flatten()
 Defaults match the paper's recommended settings.
 
 ```python
-from models.SRFRegressor import SRFRegressor
+from smoorf.SRFRegressor import SRFRegressor
 
 model = SRFRegressor()             # EST_PD + hyperbolic_secant + RF10
 model.fit(X_train, y_train)
@@ -136,8 +136,8 @@ same trained trees and just attaches the OOB machinery SRFnet needs:
 
 ```python
 from sklearn.ensemble import RandomForestRegressor
-from models.RandomForestRegressor import ExtendedRandomForest
-from models.SRFRegressor import SRFRegressor
+from smoorf.RandomForestRegressor import ExtendedRandomForest
+from smoorf.SRFRegressor import SRFRegressor
 
 # Existing sklearn RF you already trained somewhere
 rf = RandomForestRegressor(n_estimators=10, bootstrap=True)
@@ -178,7 +178,7 @@ calibration — both must be supplied externally.
 ```python
 import numpy as np
 from joblib import dump
-from models.SRFRegressor import SRFRegressor
+from smoorf.SRFRegressor import SRFRegressor
 
 model = SRFRegressor().fit(X_train, y_train)
 
@@ -196,8 +196,8 @@ np.savez('calibration.npz',
 ```python
 import numpy as np
 from joblib import load
-from models.SRFinference import SRFInference
-from models.Hypsecant import HyperbolicSecant
+from smoorf.SRFinference import SRFInference
+from smoorf.Hypsecant import HyperbolicSecant
 
 rf        = load('rf.joblib')                            # ExtendedRandomForest
 bandwidth = np.load('bandwidth.npz')['bandwidth']

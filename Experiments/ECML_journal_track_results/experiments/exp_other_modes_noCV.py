@@ -36,8 +36,8 @@ warnings.filterwarnings('ignore')
 # Add paths
 sys.path.append('../../../../')
 
-from models.RandomForestRegressor import ExtendedRandomForest
-from models.SRFnet_OOB import SRFnetOOB
+from smoorf.RandomForestRegressor import ExtendedRandomForest
+from smoorf.SRFnet_OOB import SRFnetOOB
 from optimizer_configs import get_optimizer_scheduler
 from exp_wrapper import get_bootstrap_samples
 

@@ -48,8 +48,8 @@ import pandas as pd
 from joblib import Parallel, delayed
 from sklearn.metrics import mean_squared_error
 
-from models.Hypsecant import HyperbolicSecant
-from models.TreeInfoExtractor import SklearnTreeInfoExtractor
+from smoorf.Hypsecant import HyperbolicSecant
+from smoorf.TreeInfoExtractor import SklearnTreeInfoExtractor
 
 
 class SRFInference:
@@ -68,7 +68,7 @@ class SRFInference:
     kernel : object, default ``HyperbolicSecant``
         Anything with a ``cdf(x, loc=..., scale=...)`` interface:
         ``scipy.stats.norm``, ``scipy.stats.cauchy``, or
-        ``models.Hypsecant.HyperbolicSecant``.
+        ``smoorf.Hypsecant.HyperbolicSecant``.
 
     per_tree : bool
         Whether each tree has its own bandwidth (EST / EST-PD).

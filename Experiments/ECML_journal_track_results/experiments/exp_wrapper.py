@@ -4,7 +4,7 @@ import numpy as np
 import sys
 import json
 sys.path.append('../../../models')
-from models.RandomForestRegressor import ExtendedRandomForest
+from smoorf.RandomForestRegressor import ExtendedRandomForest
 
 def create_experiment_folders(data_names, create_folder_path):
     """

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smoorf"
+version = "0.1.0"
+description = "Smoothed Random Forest: kernel-smoothed random forests with gradient-based optimization"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.2.0,<3.0.0",
+    "scipy>=1.13.0,<2.0.0",
+    "scikit-learn>=1.7.0,<2.0.0",
+    "torch>=2.8.0,<3.0.0",
+    "pandas>=2.2.0,<3.0.0",
+    "joblib>=1.5.0,<2.0.0",
+    "tensorboard>=2.20.0,<3.0.0",
+]
+
+[tool.setuptools]
+packages = ["smoorf"]

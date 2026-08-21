@@ -15,7 +15,7 @@ Default settings mirror the recommended configuration from the paper:
 
 Typical usage
 -------------
-    from models.SRFRegressor import SRFRegressor
+    from smoorf.SRFRegressor import SRFRegressor
 
     model = SRFRegressor()
     model.fit(X_train, y_train)
@@ -39,9 +39,9 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
-from models.RandomForestRegressor import ExtendedRandomForest
-from models.SRFnet_OOB import SRFnetOOB
-from models.optimizer_configs import get_optimizer_scheduler
+from smoorf.RandomForestRegressor import ExtendedRandomForest
+from smoorf.SRFnet_OOB import SRFnetOOB
+from smoorf.optimizer_configs import get_optimizer_scheduler
 
 
 class SRFRegressor:

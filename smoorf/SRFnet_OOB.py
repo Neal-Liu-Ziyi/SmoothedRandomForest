@@ -32,9 +32,9 @@ import numpy as np
 from torch.distributions import Normal
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.metrics import mean_squared_error
-from models.TreeInfoExtractor import SklearnTreeInfoExtractor
-from models.RandomForestRegressor import ExtendedRandomForest
-from models.Hypsecant import HyperbolicSecant
+from smoorf.TreeInfoExtractor import SklearnTreeInfoExtractor
+from smoorf.RandomForestRegressor import ExtendedRandomForest
+from smoorf.Hypsecant import HyperbolicSecant
 import pandas as pd
 from joblib import Parallel, delayed
 from torch.utils.tensorboard import SummaryWriter
